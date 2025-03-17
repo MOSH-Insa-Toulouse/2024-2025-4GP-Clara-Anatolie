@@ -1,0 +1,6 @@
+projet capteur:
+- 
+- faire liaisons sur la schématique
+- encodeur rotatoire: clk sur 2 ou 3 obligatoirement
+- Bluetooth: tx et rx pas sur 0 et 1 ni sur 2 et 3
+- Pot digital: en spi, sck:13, sdi:11, ss:10
