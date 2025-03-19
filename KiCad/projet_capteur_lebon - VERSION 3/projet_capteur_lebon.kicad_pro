@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 3.048,
-          "height": 4.064,
-          "width": 4.064
+          "drill": 1.0,
+          "height": 1.7,
+          "width": 2.5
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -481,8 +481,8 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "projet_capteur_lebon V2.kicad_pro",
-    "version": 1
+    "filename": "projet_capteur_lebon.kicad_pro",
+    "version": 3
   },
   "net_settings": {
     "classes": [
@@ -497,6 +497,7 @@
         "microvia_drill": 0.1,
         "name": "Default",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.5,
         "via_diameter": 1.5,
@@ -505,7 +506,7 @@
       }
     ],
     "meta": {
-      "version": 3
+      "version": 4
     },
     "net_colors": null,
     "netclass_assignments": null,
