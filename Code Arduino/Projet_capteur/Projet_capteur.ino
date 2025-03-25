@@ -5,23 +5,50 @@
 //Definitions:
 #define baudrate 9600
 
-#define rxPin 11  //Bluetooth
+  //Bluetooth:
+#define rxPin 11
 #define txPin 10
 
-#define encoder0PinA  2 //
-#define encoder0PinB  4 
+  //Encodeur rotatoire:
+#define Encodeurclk  2  //CLK Output A avec interruption
+#define Encodeurdt  3  //DT Output B
+#define Encodeursw 6   //Switch
 
 //Autres trucs:
-SoftwareSerial mySerial (rxPin, txPin); //Bluetooth
+  //Bluetooth:
+SoftwareSerial mySerial (rxPin, txPin); 
 
-Servo myservo; //Servo
-int pos = 0;
+  //Servo:
+Servo myservo;
+int Pos_servo = 0;
 
-int encoder0Pos = 0; //Encodeur
+  //Encodeur:
+int Pos_encodeur = 0; 
 
-const int flexPin = A0; //flexs
+  //FlexS:
+const int flexPin = A0;
+
+//Fonctions:
+
+void doEncoder() {
+  if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==HIGH)) { 
+    Pos_encodeur++;
+  } else if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==LOW)) {  //
+    Pos_encodeur--;
+  }
+  // Serial.println (encoder0Pos, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
+}
 
 void setup() {
+  //Encodeur rotatoire:
+  pinMode(Encodeurclk, INPUT); 
+  digitalWrite(Encodeurclk, HIGH);  // turn on pullup resistor
+
+  pinMode(Encodeurdt, INPUT); 
+  digitalWrite(Encodeurdt, HIGH);
+
+  attachInterrupt(0, doEncoder, RISING); // On met une interruption sur l'encodeur pin 2
+
   // Module Bluetooth:
   pinMode (rxPin,INPUT);
   pinMode (txPin,OUTPUT);
@@ -35,10 +62,17 @@ void setup() {
   //Flex Sensor:
   pinMode(flexPin, INPUT);
 
+  //Pour indiquer qu'on démarre:
+  Serial.println("Let's go\n");
+
 }
 
 void loop() {
-  myservo.write(pos);
-  value = analogRead(flexPin);
-
+  //value = analogRead(flexPin);
+  Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
+  if (Pos_encodeur >= 30){
+    Pos_encodeur = 0;
+  }
+  Pos_servo=160/30*Pos_encodeur; 
+  myservo.write(Pos_servo);
 }
