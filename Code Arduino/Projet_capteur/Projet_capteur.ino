@@ -22,6 +22,7 @@
 #define nombreDePixelsEnHauteur 64
 #define brocheResetOLED -1
 #define adresseI2CecranOLED 0x3C
+#define nb_item 3
 
 //Autres trucs:
   //Bluetooth:
@@ -38,9 +39,8 @@ int Pos_encodeur = 0;
 const int flexPin = A0;
 
   //OLED:
-int Position = 1;
-String Item1 = "Mesure avec Flex Sensor";
-String Item2 = "Mesure avec Capteur Graphite";
+String Item1 = "Mesure Flex Sensor";
+String Item2 = "Mesure Capt Graphite";
 String Item3 = "Servomotor";
 
 Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &Wire, brocheResetOLED);
@@ -48,24 +48,81 @@ Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &W
 //Fonctions:
 
 void doEncoder() {
-  char * str_Pos_encodeur;
-  if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==HIGH)) { 
+  if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==HIGH) ) { 
     Pos_encodeur++;
-  } else if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==LOW)) {  //
+  } 
+  else if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==LOW) ) {  //
     Pos_encodeur--;
   }
-  Serial.println(Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
+  
+  Serial.println(Pos_encodeur, DEC);    //Angle = (360 / Encoder_Resolution) * encoder0Pos
+  ecranOLED.println (F("Menu:"));
+  ecranOLED.display();
+}
+
+void Afficher_Menu (){
+  unsigned long previousMillis = 0;
+  unsigned long currentMillis = millis ();
+  int choix = 0;
+
+
+  if (currentMillis - previousMillis >= 500){
+    previousMillis = currentMillis;
+    
+    //etat_bouton = appui_bouton();
+
+    ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
+    ecranOLED.setTextSize(2);   // Taille du texte
+    ecranOLED.setCursor(0, 0);
+    ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
+    ecranOLED.println (F("*MENU*"));
+    ecranOLED.display();
+
+    choix = Pos_encodeur % nb_item;
+    switch (choix){
+      case 0 :
+        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+        ecranOLED.println(Item1);
+        ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+        ecranOLED.println(Item2);
+        ecranOLED.println(Item3);
+        ecranOLED.display();
+        break;
+
+      case 1:
+        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+        ecranOLED.println(Item1);
+        ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+        ecranOLED.println(Item2);
+        ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+        ecranOLED.println(Item3);
+        ecranOLED.display();
+        break;
+
+      case 2:
+        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+        ecranOLED.println(Item1);
+        ecranOLED.println(Item2);
+        ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+        ecranOLED.println(Item3);
+        ecranOLED.display();
+        break;
+    }
+  }
 }
 
 void setup() {
   //Encodeur rotatoire:
   pinMode(Encodeurclk, INPUT); 
-  digitalWrite(Encodeurclk, HIGH);  // turn on pullup resistor
+  digitalWrite(Encodeurclk, HIGH);  // Turn on pullup resistor
 
   pinMode(Encodeurdt, INPUT); 
-  digitalWrite(Encodeurdt, HIGH);
+  digitalWrite(Encodeurdt, HIGH);  // Turn on pullup resistor
 
-  attachInterrupt(0, doEncoder, RISING); // On met une interruption sur l'encodeur pin 2
+  attachInterrupt(0, doEncoder, RISING); // On met une interruption sur l'encodeur pin 2 ou 0?
 
   //Module Bluetooth:
   pinMode (rxPin,INPUT);
@@ -85,25 +142,21 @@ void setup() {
     while(1);
 
   //Pour indiquer qu'on démarre:
-  Serial.println(F("Let's go\n"));
+  Serial.println(F("Let's go"));
 
 }
 
 void loop() {
   int instr [100];
   int i = 0;
-  //int val_flexs =0;
+  int val_flexs =0;
 
-  //val_flexs = analogRead(flexPin);
-
-  ecranOLED.clearDisplay();
-  ecranOLED.setTextSize(1);
-  ecranOLED.setCursor(0, 0);
-  ecranOLED.setTextColor (SSD1306_BLACK, SSD1306_WHITE);
-  ecranOLED.println (F("Hello"));
-  ecranOLED.display();
   Serial.println(F("ça marche ou quoi"));
-  delay(5000);
+  Afficher_Menu();
+
+  val_flexs = analogRead(flexPin);
+  
+  Serial.println(F("ça marche ou quoi v2"));
 
   /*Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
   if (Pos_encodeur >= 30){

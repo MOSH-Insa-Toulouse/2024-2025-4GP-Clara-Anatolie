@@ -1,3 +1,4 @@
+
 /* Read a rotary encoder with interrupts
    Encoder hooked up with common to GROUND,    encoder0PinA to pin 2, encoder0PinB to pin 4
    it doesn't matter which encoder pin you use for A or B  
