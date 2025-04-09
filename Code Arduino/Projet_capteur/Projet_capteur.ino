@@ -13,9 +13,9 @@
 #define txPin 10
 
   //Encodeur rotatoire:
-#define Encodeurclk  2  //CLK Output A avec interruption
-#define Encodeurdt  3  //DT Output B
-#define Encodeursw 6   //Switch
+#define Encodeurclkpin  2  //CLK Output A avec interruption
+#define Encodeurdtpin 3  //DT Output B
+#define Encodeurswpin 6   //Switch
 
   //OLED:
 #define nombreDePixelsEnLargeur 128
@@ -37,6 +37,7 @@ int Pos_encodeur = 0;
 
   //FlexS:
 const int flexPin = A0;
+int val_flexs = 0;
 
   //OLED:
 String Item1 = "Mesure Flex Sensor";
@@ -45,19 +46,26 @@ String Item3 = "Servomotor";
 
 Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &Wire, brocheResetOLED);
 
+  //Encodeur:
+bool etat_bouton = 0;  // variable pour stocker la lecture de l'etat des boutons
+
 //Fonctions:
 
 void doEncoder() {
-  if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==HIGH) ) { 
+  if ( (digitalRead(Encodeurclkpin)==HIGH) && (digitalRead(Encodeurdtpin)==HIGH) ) { 
     Pos_encodeur++;
   } 
-  else if ( (digitalRead(Encodeurclk)==HIGH) && (digitalRead(Encodeurdt)==LOW) ) {  //
+  else if ( (digitalRead(Encodeurclkpin)==HIGH) && (digitalRead(Encodeurdtpin)==LOW) ) {  //
     Pos_encodeur--;
   }
   
   Serial.println(Pos_encodeur, DEC);    //Angle = (360 / Encoder_Resolution) * encoder0Pos
   ecranOLED.println (F("Menu:"));
   ecranOLED.display();
+}
+
+void appui_bouton (){
+  etat_bouton = digitalRead(Encodeurswpin);
 }
 
 void Afficher_Menu (){
@@ -69,7 +77,7 @@ void Afficher_Menu (){
   if (currentMillis - previousMillis >= 500){
     previousMillis = currentMillis;
     
-    //etat_bouton = appui_bouton();
+    appui_bouton();
 
     ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
     ecranOLED.setTextSize(2);   // Taille du texte
@@ -88,6 +96,11 @@ void Afficher_Menu (){
         ecranOLED.println(Item2);
         ecranOLED.println(Item3);
         ecranOLED.display();
+
+        if (etat_bouton == 1){
+          val_flexs = analogRead(flexPin);
+          Serial.println(val_flexs, DEC);
+        }
         break;
 
       case 1:
@@ -99,6 +112,10 @@ void Afficher_Menu (){
         ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
         ecranOLED.println(Item3);
         ecranOLED.display();
+
+        if (etat_bouton == 1){
+          Serial.println(F("MESURE GRAPHITE"));
+        }
         break;
 
       case 2:
@@ -109,6 +126,10 @@ void Afficher_Menu (){
         ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
         ecranOLED.println(Item3);
         ecranOLED.display();
+
+        if (etat_bouton == 1){
+          Serial.println(F("servo"));
+        }
         break;
     }
   }
@@ -116,11 +137,11 @@ void Afficher_Menu (){
 
 void setup() {
   //Encodeur rotatoire:
-  pinMode(Encodeurclk, INPUT); 
-  digitalWrite(Encodeurclk, HIGH);  // Turn on pullup resistor
+  pinMode(Encodeurclkpin, INPUT); 
+  digitalWrite(Encodeurclkpin, HIGH);  // Turn on pullup resistor
 
-  pinMode(Encodeurdt, INPUT); 
-  digitalWrite(Encodeurdt, HIGH);  // Turn on pullup resistor
+  pinMode(Encodeurdtpin, INPUT); 
+  digitalWrite(Encodeurdtpin, HIGH);  // Turn on pullup resistor
 
   attachInterrupt(0, doEncoder, RISING); // On met une interruption sur l'encodeur pin 2 ou 0?
 
@@ -147,16 +168,11 @@ void setup() {
 }
 
 void loop() {
-  int instr [100];
-  int i = 0;
-  int val_flexs =0;
+  //int instr [100];
+  //int i = 0;
 
   Serial.println(F("ça marche ou quoi"));
   Afficher_Menu();
-
-  val_flexs = analogRead(flexPin);
-  
-  Serial.println(F("ça marche ou quoi v2"));
 
   /*Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
   if (Pos_encodeur >= 30){
@@ -168,9 +184,9 @@ void loop() {
   
   //char someChar[32]={0};
 
-  if (Serial.available()>0){
+  /*if (Serial.available()>0){
     instr[i++]=Serial.read();
-  }
+  }*/
 
   /*while (Serial.available()){
     do{
