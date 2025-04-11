@@ -1,8 +1,15 @@
+/*Reste à faire:
+-mettre potentiomètre digital
+-décommenter bluetooth et le mettre au bon endroit
+-envoyer val graphite et flexs sur tel
+-coder servo avec bluetooth
+*/
+
 //Inclusion des bibliothèques:
 #include <SoftwareSerial.h>  //Bluetooth
 #include <Servo.h>  //Servo
 #include <Wire.h>   //Encodeur + OLED
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SSD1306.h>   //OLED
 #include <SPI.h>
 
 //Definitions:
@@ -33,21 +40,31 @@ Servo myservo;
 int Pos_servo = 0;
 
   //Encodeur:
-int Pos_encodeur = 0; 
+int Pos_encodeur = 0;
+bool etat_bouton = 0;  // variable pour stocker la lecture de l'etat du bouton
 
   //FlexS:
 const int flexPin = A0;
 int val_flexs = 0;
+float Vflexs, Rflexs = 0.0;
+const float VCC = 5;
+const float Rdiv = 39000.0;
+const float flatres = 25000.0;
+const float bentres = 100000.0;
+
+  //Capteur graphite:
+const int captgraphpin = 1 ;
 
   //OLED:
 String Item1 = "Mesure Flex Sensor";
 String Item2 = "Mesure Capt Graphite";
 String Item3 = "Servomotor";
+int choix = 0;
 
 Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &Wire, brocheResetOLED);
 
-  //Encodeur:
-bool etat_bouton = 0;  // variable pour stocker la lecture de l'etat des boutons
+  //Autres variables:
+unsigned long previousMillis = 0;
 
 //Fonctions:
 
@@ -69,16 +86,11 @@ void appui_bouton (){
 }
 
 void Afficher_Menu (){
-  unsigned long previousMillis = 0;
   unsigned long currentMillis = millis ();
-  int choix = 0;
-
 
   if (currentMillis - previousMillis >= 500){
     previousMillis = currentMillis;
     
-    appui_bouton();
-
     ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
     ecranOLED.setTextSize(2);   // Taille du texte
     ecranOLED.setCursor(0, 0);
@@ -86,10 +98,13 @@ void Afficher_Menu (){
     ecranOLED.println (F("*MENU*"));
     ecranOLED.display();
 
+    appui_bouton();
+
     choix = Pos_encodeur % nb_item;
+
     switch (choix){
       case 0 :
-        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextSize(1);
         ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
         ecranOLED.println(Item1);
         ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
@@ -99,12 +114,14 @@ void Afficher_Menu (){
 
         if (etat_bouton == 1){
           val_flexs = analogRead(flexPin);
-          Serial.println(val_flexs, DEC);
+          Vflexs = val_flexs * VCC / 1023;
+          Rflexs = Rdiv * (VCC / Vflexs -1.0);
+          Serial.println(Rflexs, DEC);   //à afficher sur OLED
         }
         break;
 
       case 1:
-        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextSize(1);
         ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
         ecranOLED.println(Item1);
         ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
@@ -114,12 +131,12 @@ void Afficher_Menu (){
         ecranOLED.display();
 
         if (etat_bouton == 1){
-          Serial.println(F("MESURE GRAPHITE"));
+          Serial.println(F("MESURE GRAPHITE"));  //récup signal après l'ampli et l'afficher sur tel
         }
         break;
 
       case 2:
-        ecranOLED.setTextSize(1.5);
+        ecranOLED.setTextSize(1);
         ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
         ecranOLED.println(Item1);
         ecranOLED.println(Item2);
@@ -128,7 +145,7 @@ void Afficher_Menu (){
         ecranOLED.display();
 
         if (etat_bouton == 1){
-          Serial.println(F("servo"));
+          Serial.println(F("servo"));   //faire un bouton sur l'appli qui fait bouger le servo à une certaine pos 
         }
         break;
     }
@@ -157,6 +174,9 @@ void setup() {
 
   //Flex Sensor:
   pinMode(flexPin, INPUT);
+
+  //Capt graphite:
+  pinMode(captgraphpin, INPUT);
 
   //OLED:
   if (!ecranOLED.begin (SSD1306_SWITCHCAPVCC, adresseI2CecranOLED)) // Arrêt du programme (boucle infinie) si échec d'initialisation
