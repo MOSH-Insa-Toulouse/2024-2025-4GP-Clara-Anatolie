@@ -137,7 +137,7 @@ Nous avons ensuite pu réaliser le perçage de notre plaquette et y souder nos d
 
 Voici le résultat final de notre PCB :
 
-![Plaquette_finale]()
+![Plaquette_finale](/Photos/Montage%20final.jpg)
 
 L’assemblage de la plaquette et l’Arduino a été plus compliqué que prévu. En effet, l'ensemble de nos trous étaient légèrement décalés les uns par rapport aux autres. Le problème semblait venir de l’étape de perçage.
 
