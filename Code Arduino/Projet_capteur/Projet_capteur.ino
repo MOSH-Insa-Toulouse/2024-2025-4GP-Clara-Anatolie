@@ -11,6 +11,7 @@
 #include <Wire.h>   //Encodeur + OLED
 #include <Adafruit_SSD1306.h>   //OLED
 #include <SPI.h>
+#include <stdlib.h>
 
 //Definitions:
 #define baudrate 9600
@@ -18,8 +19,8 @@
 //----------------------------------------------------------------------
 
   //Bluetooth:
-#define rxPin 11
-#define txPin 10
+#define rxPin 7
+#define txPin 8
 
   //Encodeur rotatoire:
 #define Encodeurclkpin  2  //CLK Output A avec interruption
@@ -45,7 +46,7 @@ int vitesse = 0;
   //Encodeur:
 volatile int Pos_encodeur = 0;
 int etat_bouton = 0; // variable pour stocker la lecture de l'etat du bouton
-int etat_bouton2 = 0; // variable pour stocker la lecture de l'etat du bouton la 2ème fois
+int Menu = 0; // variable pour stocker la lecture de l'etat du bouton la 2ème fois
 
   //FlexS:
 const int flexPin = A1;
@@ -86,7 +87,6 @@ Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &W
 
   //Autres variables:
 unsigned long previousMillis = 0;
-char place[16];
 
 //---------------------------------------------------------------
 
@@ -137,7 +137,7 @@ void setup() {
 
   delay(500);
 
-  // Calibration();
+  Calibration();
 
   //Pour indiquer qu'on démarre:
   Serial.println(F("Let's go"));
@@ -246,41 +246,39 @@ void doEncoder() {
   } 
   else if ( (digitalRead(Encodeurclkpin)==HIGH) && (digitalRead(Encodeurdtpin)==LOW) ) {  //
     Pos_encodeur--;
-  }
-  
-  
+  }  
 }
 
 void appui_bouton (){
-  etat_bouton == digitalRead(Encodeurswpin);
+  etat_bouton = digitalRead(Encodeurswpin);
   if (etat_bouton == 0) {
-    if (etat_bouton2 == 0) {
-      etat_bouton2++;
+    if (Menu == 0) {
+      Menu++;
     }
     else {
-      etat_bouton2--;
+      Menu--;
     }
   }
-  Serial.println(etat_bouton, DEC);
-  // Serial.println(etat_bouton2, DEC);
+  // Serial.println(etat_bouton, DEC);
+  //Serial.println(Menu, DEC);
 }
 
 //OLED
 void Afficher_Menu (){
   unsigned long currentMillis = millis ();
-  float val;
+  float valeur;
+  char place[16];
 
 
   if (currentMillis - previousMillis >= 500){
     previousMillis = currentMillis;
 
     appui_bouton();
-    // doEncoder();
     choix = Pos_encodeur % nb_item;
 
     switch (abs(choix)){
       case 0 :
-        if (etat_bouton2 == 0) {
+        if (Menu == 0) {
           ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
           ecranOLED.setTextSize(2);   // Taille du texte
           ecranOLED.setCursor(0, 0);
@@ -290,11 +288,11 @@ void Afficher_Menu (){
           ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
           ecranOLED.println(F("Mesure Flex Sensor"));
           ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-          ecranOLED.println(F("Mesure Capt Graphite"));
+          ecranOLED.println(F("Mesure Graphite Sensor"));
           ecranOLED.println(F("Servomotor"));
           ecranOLED.display();
         }
-        else if (etat_bouton2 == 1) {
+        else if (Menu == 1) {
           ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
           ecranOLED.setTextSize(2);   // Taille du texte
           ecranOLED.setCursor(0, 0);
@@ -302,16 +300,16 @@ void Afficher_Menu (){
           ecranOLED.println (F("*Menu 1*")); 
           ecranOLED.setTextSize(1);
           ecranOLED.println (F("FlexSensor :"));
-          ecranOLED.setTextSize(2);
-          val = flexSensor();
-          dtostrf(val, 16, 2, place);
-          ecranOLED.println (place); 
+          ecranOLED.setTextSize(1);
+          valeur = flexSensor();
+          dtostrf(valeur, 16, 2, place);
+          ecranOLED.println (place);
           ecranOLED.display();
         }
         break;
 
       case 1:
-          if (etat_bouton2 == 0) {
+          if (Menu == 0) {
             ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
             ecranOLED.setTextSize(2);   // Taille du texte
             ecranOLED.setCursor(0, 0);
@@ -321,47 +319,47 @@ void Afficher_Menu (){
             ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
             ecranOLED.println(F("Mesure Flex Sensor"));
             ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-            ecranOLED.println(F("Mesure Capt Graphite"));
+            ecranOLED.println(F("Mesure Graphite Sensor"));
             ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
             ecranOLED.println(F("Servomotor"));
             ecranOLED.display();
           }
 
-          else if (etat_bouton2 == 1) {
+          else if (Menu == 1) {
             ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
             ecranOLED.setTextSize(2);   // Taille du texte
             ecranOLED.setCursor(0, 0);
             ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
             ecranOLED.println (F("*Menu 2*")); 
             ecranOLED.setTextSize(1);
-            ecranOLED.println (F("Graphite :")); 
-            ecranOLED.setTextSize(2);
-            val = graphiteSensor();
-            dtostrf(val, 16, 2, place);
+            ecranOLED.println (F("Graphite Sensor :")); 
+            ecranOLED.setTextSize(1);
+            valeur = graphiteSensor();
+            dtostrf(valeur, 16, 2, place);
             ecranOLED.println (place); 
             ecranOLED.display();
           }
         break;
 
       case 2:
-      if (etat_bouton2 == 0) {
-        ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
-        ecranOLED.setTextSize(2);   // Taille du texte
-        ecranOLED.setCursor(0, 0);
-        ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
-        ecranOLED.println (F("*MENU*"));
-        ecranOLED.setTextSize(1);
-        ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-        ecranOLED.println(F("Mesure Flex Sensor"));
-        ecranOLED.println(F("Mesure Capt Graphite"));
-        ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-        ecranOLED.println(F("Servomotor"));
-        ecranOLED.display();
-      }
-      else if (etat_bouton2 == 1){
-          Serial.println(F("servo"));   //faire un bouton sur l'appli qui fait bouger le servo à une certaine pos 
+        if (Menu == 0) {
+          ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
+          ecranOLED.setTextSize(2);   // Taille du texte
+          ecranOLED.setCursor(0, 0);
+          ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
+          ecranOLED.println (F("*MENU*"));
+          ecranOLED.setTextSize(1);
+          ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+          ecranOLED.println(F("Mesure Flex Sensor"));
+          ecranOLED.println(F("Mesure Graphite Sensor"));
+          ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+          ecranOLED.println(F("Servomotor"));
+          ecranOLED.display();
+        }
+        else if (Menu == 1){
+            Serial.println(F("servo"));   //faire un bouton sur l'appli qui fait bouger le servo à une certaine pos 
 
-      }
+        }
         break;
     }
   }
