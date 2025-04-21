@@ -19,8 +19,8 @@
 //----------------------------------------------------------------------
 
   //Bluetooth:
-#define rxPin 7
-#define txPin 8
+#define rxPin 8
+#define txPin 7
 
   //Encodeur rotatoire:
 #define Encodeurclkpin  2  //CLK Output A avec interruption
@@ -52,7 +52,7 @@ int Menu = 0; // variable pour stocker la lecture de l'etat du bouton la 2ème f
 const int flexPin = A1;
 int val_flexs = 0;
 float Vflexs, Rflexs = 0.0;
-const float VCC = 5;
+const float VCC = 5.0;
 const float Rdiv = 39000.0;
 const float flatres = 25000.0;
 const float bentres = 100000.0;
@@ -127,7 +127,6 @@ void setup() {
   if (!ecranOLED.begin (SSD1306_SWITCHCAPVCC, adresseI2CecranOLED)) // Arrêt du programme (boucle infinie) si échec d'initialisation
     while(1);
 
-
  //Digital Potentiometre:
   pinMode (ssMCPin, OUTPUT); //select pin output
   digitalWrite(ssMCPin, HIGH); //SPI chip disabled
@@ -138,6 +137,7 @@ void setup() {
   delay(500);
 
   Calibration();
+ // setPotWiper(pot0, 0);
 
   //Pour indiquer qu'on démarre:
   Serial.println(F("Let's go"));
@@ -152,6 +152,12 @@ void loop() {
 
   // Serial.println(F("ça marche ou quoi"));
   Afficher_Menu();
+
+ /* char str[16];
+  float val = graphiteSensor();
+  dtostrf(val, 10, 2, str);
+  Serial.println(str);*/
+
 
   /*Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
   if (Pos_encodeur >= 30){
@@ -184,9 +190,13 @@ void loop() {
 
 //Valeur FlexSensor :
 float flexSensor() {
+  char valEnvoie[16];
   float ADCflex = analogRead(flexPin);
   float Vflexs = ADCflex * VCC / 1024.0;
   float Rflexs = Rdiv * (VCC / Vflexs - 1.0);
+  dtostrf(Rflexs, 16, 0, valEnvoie);
+  mySerial.write(valEnvoie);
+  delay(1000);
   return Rflexs;
 }
 
@@ -196,6 +206,10 @@ float graphiteSensor() {
   float VGraph = ADCgraph * VCC / 1024.0;
   
   RGraph = R1 * (1 + R3/R2) * (VCC / VGraph) - R1 - R5; 
+
+  /*if (VGraph == 0) {
+    RGraph = 0.0;
+  }*/
 
   return RGraph;
 }
