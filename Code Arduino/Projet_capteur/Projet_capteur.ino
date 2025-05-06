@@ -73,7 +73,7 @@ int choix = 0;
 #define MCP_NOP                 0b00000000
 #define MCP_WRITE               0b00010001
 #define MCP_SHTDWN              0b00100001
-#define ssMCPin                 10
+//#define ssMCPin                 10
 
 const int csPin                = 10;
 const int maxPositions         = 256;
@@ -128,16 +128,17 @@ void setup() {
     while(1);
 
  //Digital Potentiometre:
-  pinMode (ssMCPin, OUTPUT); //select pin output
-  digitalWrite(ssMCPin, HIGH); //SPI chip disabled
+  pinMode (csPin, OUTPUT); //select pin output
+  digitalWrite(csPin, HIGH); //SPI chip disabled
+  pinMode (csPin, INPUT);
   SPI.begin();
 
   ecranOLED.clearDisplay();
 
   delay(500);
 
-  Calibration();
- // setPotWiper(pot0, 0);
+  //Calibration();
+  setPotWiper(pot0, 255);
 
   //Pour indiquer qu'on démarre:
   Serial.println(F("Let's go"));
@@ -151,12 +152,12 @@ void loop() {
   //int i = 0;
 
   // Serial.println(F("ça marche ou quoi"));
-  Afficher_Menu();
+  //Afficher_Menu();
 
- /* char str[16];
+  char str[16];
   float val = graphiteSensor();
   dtostrf(val, 10, 2, str);
-  Serial.println(str);*/
+  Serial.println(str);
 
 
   /*Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
