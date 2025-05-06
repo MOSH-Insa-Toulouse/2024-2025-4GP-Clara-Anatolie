@@ -65,6 +65,9 @@ const float R1 = 100000;
 const float R3 = 100000;
 const float R5 = 10000;
 
+int i=1;
+float sum=0.0;
+
 
   //OLED:
 int choix = 0;
@@ -137,7 +140,7 @@ void setup() {
 
   delay(500);
 
-  Calibration();
+  //Calibration();
   //setPotWiper(pot0, 255);
 
   //Pour indiquer qu'on démarre:
@@ -153,9 +156,14 @@ void loop() {
 
   // Serial.println(F("ça marche ou quoi"));
   //Afficher_Menu();
-
+  
   char str[16];
+
   float val = graphiteSensor();
+  //sum+=val;
+  //float res=sum/i;
+  //i++;
+
   dtostrf(val, 10, 2, str);
   Serial.println(str);
   Serial.println("OK");
@@ -199,16 +207,16 @@ float flexSensor() {
   float Rflexs = Rdiv * (VCC / Vflexs - 1.0);
   dtostrf(Rflexs, 16, 0, valEnvoie);
   mySerial.write(valEnvoie);
-  delay(1000);
+  delay(500);
   return Rflexs;
 }
 
 //Valeur Graphite sensor : 
 float graphiteSensor() {
-  float ADCgraph = analogRead(graphitepin); //changement de pin
+  float ADCgraph = analogRead(flexPin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0;
   
-  RGraph = R1 * (1 + R3/R2) * (VCC / VGraph) - R1 - R5; 
+  RGraph = Rdiv*(VCC/VGraph-1); 
 
   /*if (VGraph == 0) {
     RGraph = 0.0;
@@ -218,7 +226,7 @@ float graphiteSensor() {
 }
 
 float graphiteSensor_voltage() {
-  float ADCgraph = analogRead(graphitepin); //changement de pin
+  float ADCgraph = analogRead(flexPin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0; 
 
   /*if (VGraph == 0) {
