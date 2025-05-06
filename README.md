@@ -52,7 +52,7 @@ Afin de réaliser notre dispositif électronique, nous avons eu besoin de :
 - Encodeur rotatoire ;
 - Capteur graphite et 2 pinces crocodiles ;
 - 20 sockets ;
-- 35 hearders.
+- 35 headers.
 
 ## Simulation électronique du capteur sous LTSpice
 
@@ -120,7 +120,7 @@ Les fichiers KiCad sont disponibles dans le dossier [KiCad](https://github.com/M
 
 ## Réalisation du shield
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une fois notre PCB réalisé dur Kicad, nous avons pu passer à la réalisation physique de notre PCB. Voici les étapes de fabrication réalisées, avec l'aide de Cathy Crouzet (un grand merci à elle qui a pris le temps de tirer notre PCB et nous expliquer le processus de fabrication !) :
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une fois notre PCB réalisé sur Kicad, nous avons pu passer à la réalisation physique de notre PCB. Voici les étapes de fabrication réalisées, avec l'aide de Cathy Crouzet (un grand merci à elle qui a pris le temps de tirer notre PCB et nous expliquer le processus de fabrication !) :
 
 Étape 0 (importante !) : vérification du PCB sous KiCad ;
 Étape 1 : édition du masque de gravure de notre PCB sous KiCad ;
@@ -140,6 +140,8 @@ Voici le résultat final de notre PCB :
 ![Plaquette_finale](/Photos/Montage%20final.jpg)
 
 L’assemblage de la plaquette et l’Arduino a été plus compliqué que prévu. En effet, l'ensemble de nos trous étaient légèrement décalés les uns par rapport aux autres. Le problème semblait venir de l’étape de perçage.
+
+De plus, le header connecté à la pin A0, qui devait servir pour le capteur de graphite, ne fonctionne pas. Nous avons donc décidé d'utiliser la pin A1, qui servira donc à récupérer les données du flex sensor et du capteur de graphite. Il nous suffit alors de brancher/débrancher les capteurs pour les changer.
 
 ## Datasheet
 

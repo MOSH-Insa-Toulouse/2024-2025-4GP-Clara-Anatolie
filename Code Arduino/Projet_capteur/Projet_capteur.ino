@@ -77,7 +77,7 @@ int choix = 0;
 
 const int csPin                = 10;
 const int maxPositions         = 256;
-const long rAB                 = 33800;
+const long rAB                 = 33800; //comment on le sait
 const byte rWiper              = 125;
 float R2;
 const byte pot0                = 0x11;
@@ -137,8 +137,8 @@ void setup() {
 
   delay(500);
 
-  //Calibration();
-  setPotWiper(pot0, 255);
+  Calibration();
+  //setPotWiper(pot0, 255);
 
   //Pour indiquer qu'on démarre:
   Serial.println(F("Let's go"));
@@ -158,6 +158,8 @@ void loop() {
   float val = graphiteSensor();
   dtostrf(val, 10, 2, str);
   Serial.println(str);
+  Serial.println("OK");
+  delay(1000);
 
 
   /*Serial.println (Pos_encodeur, DEC);  //Angle = (360 / Encoder_Resolution) * encoder0Pos
@@ -203,7 +205,7 @@ float flexSensor() {
 
 //Valeur Graphite sensor : 
 float graphiteSensor() {
-  float ADCgraph = analogRead(graphitepin);
+  float ADCgraph = analogRead(graphitepin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0;
   
   RGraph = R1 * (1 + R3/R2) * (VCC / VGraph) - R1 - R5; 
@@ -213,6 +215,17 @@ float graphiteSensor() {
   }*/
 
   return RGraph;
+}
+
+float graphiteSensor_voltage() {
+  float ADCgraph = analogRead(graphitepin); //changement de pin
+  float VGraph = ADCgraph * VCC / 1024.0; 
+
+  /*if (VGraph == 0) {
+    RGraph = 0.0;
+  }*/
+
+  return VGraph;
 }
 
 //Digital potentiometre
@@ -235,7 +248,7 @@ void Calibration() {
     setPotWiper(pot0, pos);
     pos += 5;
     delay(200);
-  } while ((graphiteSensor() < (target - tol) || graphiteSensor() > (target + tol)) && pos <= 265);
+  } while ((graphiteSensor_voltage() < (target - tol) || graphiteSensor_voltage() > (target + tol)) && pos <= 265);
   
   dtostrf(pos, 5, 2, chaine);
   
@@ -250,6 +263,8 @@ void Calibration() {
   }
   else {
     Serial.println(F("Potentiometer not calibrated at target 3V"));
+    dtostrf(pos, 5, 2, chaine);
+    Serial.print(chaine); //à enlever + tard
   }
 } 
 
