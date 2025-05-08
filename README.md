@@ -131,9 +131,7 @@ Les fichiers KiCad sont disponibles dans le dossier [KiCad](https://github.com/M
 
 Nous avons ensuite pu réaliser le perçage de notre plaquette et y souder nos divers composants selon le schéma du PCB obtenu sur Kicad.
 
-![Perçage_du_PCB]()
-
-![Soudage_du_PCB]()
+![Perçage_du_PCB](/Photos/Perçage_PCB.jpg)
 
 Voici le résultat final de notre PCB :
 
