@@ -73,7 +73,7 @@ int choix = 0;
   //Potentiomètre digital:
 const int csPin                = 10;
 const int maxPositions         = 256;
-const long rAB                 = 47000;
+const long rAB                 = 33800;   //comment on le sait?
 const byte rWiper              = 125;
 float R2;
 const byte pot0                = 0x11;
@@ -130,7 +130,7 @@ void setup() {
   SPI.begin();
 
   //Calibration();
-  setPotWiper(pot0, 0);
+  //setPotWiper(pot0, 255);
 
   delay(500);
 
@@ -143,12 +143,11 @@ void loop() {
 
   Afficher_Menu();
   
-  char str[16];
-  float val=graphiteSensor();
-  dtostrf(val, 10, 2, str);
-  Serial.println(str);
-  Serial.println("OK");
-  delay(1000);
+  //char str[16];
+  //dtostrf(val, 10, 2, str);
+  //Serial.println(str);
+  //Serial.println("OK");
+  //delay(1000);
   
   //char someChar[32]={0};
 
@@ -189,7 +188,7 @@ float flexSensor() {
 //Renvoie la valeur de la résisatnce aux bornes du capteur graphite
 
 float graphiteSensor() {
-  float ADCgraph = analogRead(graphitepin); //changement de pin
+  float ADCgraph = analogRead(flexPin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0;
   
   RGraph = Rdiv*(VCC/VGraph-1); 
@@ -199,7 +198,7 @@ float graphiteSensor() {
 //Renvoie la valeur de la tension aux bornes du capteur graphite
 
 float graphiteSensor_voltage() {
-  float ADCgraph = analogRead(graphitepin); //changement de pin
+  float ADCgraph = analogRead(flexPin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0; 
 
   /*if (VGraph == 0) {

@@ -7,7 +7,7 @@ void setup(){
 void loop(){
 analogWrite( pinMoteur, LOW );
 delay(2000);
-MoteurVitessePWM();
+//MoteurVitessePWM();
 MoteurAccelerationPWM();
 }
 
@@ -37,8 +37,8 @@ analogWrite( pinMoteur, LOW );
 
 void MoteurAccelerationPWM(){ 
 // Impulsion de démarrage (75%)  
-//analogWrite( pinMoteur, 191 );   
-//delay(50);      
+analogWrite( pinMoteur, 191 );
+delay(50);
 
 // Acceleration  
 for( int i = 30; i<= 255; i++ ){
@@ -50,6 +50,6 @@ delay( 2000 );
 
 // Deceleration  
 for( int i = 255; i>=0; i-- ){
-  analogWrite( pinMoteur, i );
+  analogWrite( pinMoteur, -i );
   delay(50);}
 } 
