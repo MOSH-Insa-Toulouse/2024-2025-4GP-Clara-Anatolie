@@ -11,6 +11,7 @@
 - [Réalisation du shield](#réalisation-du-shield)
 - [Code Arduino](#code-arduino)
 - [Application Android](#application-android)
+- [Tentatives de résolution des problèmes](#tentaitve-de-résolution-des-problèmes)
 - [Datasheet](#datasheet)
 - [Conclusions et analyse critique du projet](#conclusions-et-analyse-critique-du-projet)
 - [Contacts](#contacts)
@@ -168,6 +169,10 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
 
+## Tentatives de résolution des problèmes
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorsque nous tentons de récupérer la valeur de la résistance du capteur graphite, nous obtenons une valeur infinie. En effet, la tension de sortie de ce capteur est nulle. Nous avons vérifié toutes les connexions sur le PCB à l'aide d'un multimètre. Nous avons également vérifié les valeurs des résistances et changé les composants. Nous avons aussi essayé de remplacer le potentiomètre par une résistance fixe de 1$k\ohm$, le capteur graphite par une résistance fixe de 100$M\ohm$ et le PCB par une breadboard. Enfin, nous avons essayé diférents programmes, qui donnaient tous le meme resultat. Nous n'avons pas réussi à identifier le problème et nous avions déjà passé beaucoup de temps dessus alors nous  avons décidé d'utiliser le pin A0, celui du flex sensor pour récupérer les valeurs du capteur graphite.
+
 ## Datasheet
 
 La datasheet de notre capteur est disponible `[ici]()`.
@@ -176,7 +181,7 @@ La datasheet de notre capteur est disponible `[ici]()`.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ce projet a été très enrichissant. En menant un projet de bout en bout, des simulations à la datasheet, nous avons pu avoir un avant goût du travail d'ingénieur. Nous avons aussi pu avoir une vision des nombreuses compétences (simulation électronique, développement informatique, design d'un montage électronique, fabrication physique de ce dernier, etc.) indispensables à un ingénieur de nos jours. En ce sens, c'est un projet qui a donc été assez professionnalisant. De  plus, il est gratifiant de pouvoir fabriquer un produit dans son entièreté et de le voir fonctionner.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En ce qui concerne le capteur graphite fabriqué, il est fonctionnel et les tests nous permettent de dégager des tendances cohérentes avec la physique. Cependant, les conditions de tests étant rudimentaires et peu reproductibles, cela conduit à tout de même obtenir des résultats assez aléatoires. Il est donc nécessaire de prendre du recul.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En ce qui concerne le capteur graphite fabriqué, il n'est malheureusement pas fonctionnel pour nous, malgré toutes nos tentatives de compréhension du problème. Les tests avec le pin du flex sensor nous permettent de dégager des tendances à peu près cohérentes avec la physique. Cependant, les conditions de tests étant rudimentaires, peu reproductibles et non flitrées dans notre cas, cela conduit à tout de même obtenir des résultats assez aléatoires. Il est donc nécessaire de prendre du recul.
 
 ## Contacts
 
