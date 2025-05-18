@@ -9,6 +9,8 @@
 - [Simulation électronique du capteur sous LTSpice](#simulation-électronique-du-capteur-sous-ltspice)
 - [Design du PCB sous KiCad](#design-du-pcb-sous-kicad)
 - [Réalisation du shield](#réalisation-du-shield)
+- [Code Arduino](#code-arduino)
+- [Application Android](#application-android)
 - [Datasheet](#datasheet)
 - [Conclusions et analyse critique du projet](#conclusions-et-analyse-critique-du-projet)
 - [Contacts](#contacts)
@@ -139,7 +141,32 @@ Voici le résultat final de notre PCB :
 
 L’assemblage de la plaquette et l’Arduino a été plus compliqué que prévu. En effet, l'ensemble de nos trous étaient légèrement décalés les uns par rapport aux autres. Le problème semblait venir de l’étape de perçage.
 
-De plus, le header connecté à la pin A0, qui devait servir pour le capteur de graphite, ne fonctionne pas. Nous avons donc décidé d'utiliser la pin A1, qui servira donc à récupérer les données du flex sensor et du capteur de graphite. Il nous suffit alors de brancher/débrancher les capteurs pour les changer.
+De plus, le header connecté à la pin A0, qui devait servir pour le capteur de graphite, ne fonctionne pas. Nous avons donc décidé d'utiliser la pin A1, qui servira donc à récupérer les données du flex sensor et du capteur de graphite. Il nous suffit alors de brancher/débrancher les capteurs pour les changer. Malheureusement, le signal provenant du capteur de graphite ne sera donc pas filtré.
+
+## Code Arduino
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous avons utilisé l'IDE Arduino. Plusieurs fichiers de test sont disponibles dans le [dossier Arduino](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Codes_Arduino_Tests).
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour le [fichier principal](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Projet_capteur), nous avions prévu de faire une calibration du potentiomètre digital en fonction de la valeur mesurée par le capteur graphite. Ensuite, le menu de l'écran OLED propose 3 options:
+- Utiliser le flex sensor
+- Utiliser le capteur graphite
+- Utiliser le Servomoteur
+
+![Menu](/Photos/Menu.jpg)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le choix se fait grâce à l'encodeur rotatoire. En tournant, on peut passer sur les différentes options puis en sélectionner une en appuyant sur l'encodeur. Cet appui sert également à sortir du menu selectionné.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option Graphite Sensor récupère sa valeur de résistance et l'affiche sur l'OLED (normalement). Enfin, la dernière option déplace le servomoteur en fonction de la valeur du flex sensor.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le calcul de la résistance du capteur en graphite se fait avec : $$Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$$ \
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Et dans notre cas, notre résistance R2 est variable : c'est celle du potentiomètre digital qui est calculé avec : $`R2=\frac{47500*pos}{256}+125`$ où notre $47500$ correspond à la valeur de résistance maximale de notre MCP41050 et $pos$ la position du potentiomètre parmi les 256 valeurs.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et affiche un graphe.
+
+## Application Android
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
 
 ## Datasheet
 
@@ -147,7 +174,7 @@ La datasheet de notre capteur est disponible `[ici]()`.
 
 ## Conclusions et analyse critique du projet
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ce projet a été très enrichissant. En menant un projet de bout en bout, des simulations à la datasheet, nous avons pu avoir un avant goût du travail d'ingénieur. Nous avons aussi pu avoir une vision des nombreuses compétences (simulation électronique, développement informatique, design d'un montage électronique, fabrication physique de ce dernier, etc.) indispensables à un ingénieur de nos jours. En ce sens, c'est ce porihet a donc été assez professionnalisant. De  plus, il est gratifiant de pouvoir fabriquer un produit dans son entièreté et de le voir fonctionner.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ce projet a été très enrichissant. En menant un projet de bout en bout, des simulations à la datasheet, nous avons pu avoir un avant goût du travail d'ingénieur. Nous avons aussi pu avoir une vision des nombreuses compétences (simulation électronique, développement informatique, design d'un montage électronique, fabrication physique de ce dernier, etc.) indispensables à un ingénieur de nos jours. En ce sens, c'est un projet qui a donc été assez professionnalisant. De  plus, il est gratifiant de pouvoir fabriquer un produit dans son entièreté et de le voir fonctionner.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En ce qui concerne le capteur graphite fabriqué, il est fonctionnel et les tests nous permettent de dégager des tendances cohérentes avec la physique. Cependant, les conditions de tests étant rudimentaires et peu reproductibles, cela conduit à tout de même obtenir des résultats assez aléatoires. Il est donc nécessaire de prendre du recul.
 
