@@ -1,37 +1,43 @@
 //----------------------------Inclusion des bibliothèques--------------------------
 
 #include <SoftwareSerial.h>  //Bluetooth
-#include <Servo.h>  //Servo
-#include <Wire.h>   //Encodeur + OLED
+#include <Servo.h>  //Servomoteur
+#include <Wire.h>   //OLED
 #include <Adafruit_SSD1306.h>   //OLED
-#include <SPI.h>
+#include <SPI.h>  //Potentiomètre
 #include <stdlib.h>
 
-//----------------------------Définitions------------------------------------------
+//----------------------------Définitions et constantes------------------------------
 
   //Bluetooth:
 #define rxPin 8
 #define txPin 7
 
   //Encodeur rotatoire:
-#define Encodeurclkpin  2  //CLK Output A avec interruption
+#define Encodeurclkpin  2  //CLK Output A, avec interruption
 #define Encodeurdtpin 4  //DT Output B
 #define Encodeurswpin 6   //Switch
 
   //OLED:
-#define nombreDePixelsEnLargeur 128
-#define nombreDePixelsEnHauteur 64
-#define brocheResetOLED -1
+#define nombreDePixelsEnLargeur 128 //Largeur de l'écran OLED, en pixels
+#define nombreDePixelsEnHauteur 64  //Hauteur de l'écran OLED, en pixels
+#define brocheResetOLED -1  //Reset de l'écran OLED
 #define adresseI2CecranOLED 0x3C
-#define nb_item 3
+#define nb_item 3 //Nombre de choix dans le menu
 
-  //Servomotor:
-#define pinServo 9 // pin contrôlant le moteur (PWM pin)
+  //Servomoteur:
+#define servopin 9  // pin contrôlant le moteur (pin PWM)
 
   //Potentiomètre digital:
 #define MCP_NOP                 0b00000000
 #define MCP_WRITE               0b00010001
 #define MCP_SHTDWN              0b00100001
+
+  //Flex sensor:
+#define flexPin A1
+
+  //Capteur graphite:
+#define graphitepin A0
 
   //Autres:
 #define baudrate 9600
@@ -39,19 +45,19 @@
 //----------------------------Variables------------------------------------------
 
   //Bluetooth:
-SoftwareSerial mySerial (rxPin, txPin); 
+SoftwareSerial mySerial (rxPin, txPin);
+//int i=1; 
 
-  //Servo:
+  //Servomoteur:
 Servo myservo;
 int Pos_servo = 0;
 
   //Encodeur:
 volatile int Pos_encodeur = 0;
 int etat_bouton = 0; // variable pour stocker la lecture de l'etat du bouton
-int Menu = 0; //
+int Menu = 0;
 
-  //FlexS:
-const int flexPin = A1;
+  //Flex sensor:
 float val_flexs = 0;
 float Vflexs, Rflexs = 0.0;
 const float VCC = 5.0;
@@ -60,7 +66,7 @@ const float flatres = 25000.0;
 const float bentres = 100000.0;
 
   //Capteur graphite:
-const int graphitepin = A0 ;
+unsigned long previousMillis = 0; //Pour conserver le temps passé depuis le dernier appel de millis()
 int val_graph = 0;
 float VGraph, RGraph = 0.0;
 const float R1 = 100000;
@@ -71,19 +77,15 @@ const float R5 = 10000;
 int choix = 0;
 
   //Potentiomètre digital:
-const int csPin                = 10;
-const int maxPositions         = 256;
-const long rAB                 = 47000;
-const byte rWiper              = 125;
+const int csPin = 10;
+const int maxPositions = 256;
+const long rAB = 47000;
+const byte rWiper = 125;
+const byte pot0 = 0x11;
+const byte pot0shutdown = 0x21;
 float R2;
-const byte pot0                = 0x11;
-const byte pot0shutdown        = 0x21;
 
 Adafruit_SSD1306 ecranOLED (nombreDePixelsEnLargeur, nombreDePixelsEnHauteur, &Wire, brocheResetOLED);
-
-  //Autres:
-unsigned long previousMillis = 0;
-//int i=1;
 
 //----------------------------Setup------------------------------------------
 
@@ -97,7 +99,7 @@ void setup() {
   digitalWrite(Encodeurdtpin, HIGH);  // Turn on pullup resistor
 
   pinMode(Encodeurswpin, INPUT); 
-  digitalWrite(Encodeurswpin, HIGH);
+  digitalWrite(Encodeurswpin, HIGH);  // Turn on pullup resistor
 
   attachInterrupt(0, doEncoder, RISING); // On met une interruption sur l'encodeur
 
@@ -108,14 +110,14 @@ void setup() {
   mySerial.begin(baudrate);
   Serial.begin(baudrate);
 
-  //Servomotor:
-  myservo.attach(pinServo);
+  //Servomoteur:
+  myservo.attach(servopin);
 
   //Flex Sensor:
   pinMode(flexPin, INPUT);
 
   //Capt graphite:
-  pinMode(graphitepin, INPUT);
+  //pinMode(graphitepin, INPUT);
 
   //OLED:
   if (!ecranOLED.begin (SSD1306_SWITCHCAPVCC, adresseI2CecranOLED)) // Arrêt du programme (boucle infinie) si échec d'initialisation
@@ -139,16 +141,12 @@ void setup() {
 
 }
 
+//----------------------------Loop------------------------------------------
+
 void loop() {
 
   Afficher_Menu();
-  
-  char str[16];
-  float val=graphiteSensor();
-  dtostrf(val, 10, 2, str);
-  Serial.println(str);
   Serial.println("OK");
-  delay(1000);
   
   //char someChar[32]={0};
 
@@ -171,7 +169,9 @@ void loop() {
 
 }
 
-//Renvoie la valeur de la résisatnce aux bornes du flex sensor
+//----------------------------Fonctions------------------------------------------
+
+// Renvoie la valeur de la résisatnce aux bornes du flex sensor
 
 float flexSensor() {
   char val_envoi[16];
@@ -186,7 +186,7 @@ float flexSensor() {
   return Rflexs;
 }
 
-//Renvoie la valeur de la résisatnce aux bornes du capteur graphite
+// Renvoie la valeur de la résisatnce aux bornes du capteur graphite
 
 float graphiteSensor() {
   float ADCgraph = analogRead(graphitepin); //changement de pin
@@ -196,20 +196,16 @@ float graphiteSensor() {
   return RGraph;
 }
 
-//Renvoie la valeur de la tension aux bornes du capteur graphite
+// Renvoie la valeur de la tension aux bornes du capteur graphite
 
 float graphiteSensor_voltage() {
   float ADCgraph = analogRead(graphitepin); //changement de pin
   float VGraph = ADCgraph * VCC / 1024.0; 
 
-  /*if (VGraph == 0) {
-    RGraph = 0.0;
-  }*/
-
   return VGraph;
 }
 
-//Règle la résistance de sortie du potentiomètre digital
+// Règle la résistance de sortie du potentiomètre digital
 
 void setPotWiper(int addr, int pos) {
   pos = constrain(pos, 0, 255);
@@ -221,7 +217,7 @@ void setPotWiper(int addr, int pos) {
   R2 = ((rAB * pos) / maxPositions) + rWiper;
 }
 
-//Calibre le potentiomètre digital pour avoir une tensoin de 3V avec une tolérance de 0.15V
+// Calibre le potentiomètre digital pour avoir une tensoin de 3V avec une tolérance de 0.15V
 
 void Calibration() {
   float target = 3.0, tol = 0.15;
@@ -252,7 +248,7 @@ void Calibration() {
   }
 } 
 
-//Lit la position de l'encodeur, utilisée lors de l'interruption
+// Lit la position de l'encodeur, utilisée lors de l'interruption
 
 void doEncoder() {
   if ( (digitalRead(Encodeurclkpin)==HIGH) && (digitalRead(Encodeurdtpin)==HIGH) ) { 
@@ -263,7 +259,7 @@ void doEncoder() {
   }  
 }
 
-//Vérifie l'état du bouton de l'endodeur rotatoire
+// Vérifie l'état du bouton de l'endodeur rotatoire
 
 void appui_bouton (){
   etat_bouton = digitalRead(Encodeurswpin);
@@ -276,17 +272,17 @@ void appui_bouton (){
     }
   }
   // Serial.println(etat_bouton, DEC);
-  //Serial.println(Menu, DEC);
+  // Serial.println(Menu, DEC);
 }
 
-//Affiche le menu sur l'écran OLED et les actions associées
+// Affiche le menu sur l'écran OLED et les actions associées
 
 void Afficher_Menu (){
-  unsigned long currentMillis = millis ();
+  unsigned long currentMillis = millis ();  // Sauvegarde la valeur du temps écoulé depuis le lancement du programme
   float valeur;
   char place[16];
 
-  if (currentMillis - previousMillis >= 500){
+  if (currentMillis - previousMillis >= 300){
     previousMillis = currentMillis;
 
     appui_bouton();
@@ -298,14 +294,14 @@ void Afficher_Menu (){
           ecranOLED.clearDisplay();   // Effaçage de l'intégralité du buffer
           ecranOLED.setTextSize(2);   // Taille du texte
           ecranOLED.setCursor(0, 0);
-          ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
+          ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);  // Met le texte en blanc et le fond en noir
           ecranOLED.println (F("*MENU*"));
           ecranOLED.setTextSize(1);
           ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-          ecranOLED.println(F("Mesure Flex Sensor"));
+          ecranOLED.println(F("Mesure Flex Sensor")); // Ecrit le premier choix du menu comme en "surbrillance"...
           ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-          ecranOLED.println(F("Mesure Graphite Sensor"));
-          ecranOLED.println(F("Servomotor"));
+          ecranOLED.println(F("Mesure Graphite Sensor")); // ... et le reste normalement
+          ecranOLED.println(F("Servomoteur"));
           ecranOLED.display();
         }
         else if (Menu == 1) {
@@ -337,7 +333,7 @@ void Afficher_Menu (){
             ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
             ecranOLED.println(F("Mesure Graphite Sensor"));
             ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-            ecranOLED.println(F("Servomotor"));
+            ecranOLED.println(F("Servomoteur"));
             ecranOLED.display();
           }
 
@@ -370,7 +366,7 @@ void Afficher_Menu (){
           ecranOLED.println(F("Mesure Flex Sensor"));
           ecranOLED.println(F("Mesure Graphite Sensor"));
           ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-          ecranOLED.println(F("Servomotor"));
+          ecranOLED.println(F("Servomoteur"));
           ecranOLED.display();
         }
         else if (Menu == 1){
@@ -380,7 +376,7 @@ void Afficher_Menu (){
           ecranOLED.setTextColor (SSD1306_WHITE, SSD1306_BLACK);
           ecranOLED.println (F("*Menu 3*")); 
           ecranOLED.setTextSize(1);
-          ecranOLED.println (F("Servomotor :")); 
+          ecranOLED.println (F("Servomoteur :")); 
           ecranOLED.setTextSize(1);
 
           val_flexs=flexSensor();
@@ -405,3 +401,4 @@ void Afficher_Menu (){
     }
   }
 }
+ 
