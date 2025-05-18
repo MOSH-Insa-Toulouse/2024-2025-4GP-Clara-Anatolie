@@ -10,8 +10,9 @@
 - [Design du PCB sous KiCad](#design-du-pcb-sous-kicad)
 - [Réalisation du shield](#réalisation-du-shield)
 - [Code Arduino](#code-arduino)
+- [Tentatives de résolution des problèmes](#tentatives-de-résolution-des-problèmes)
 - [Application Android](#application-android)
-- [Tentatives de résolution des problèmes](#tentaitve-de-résolution-des-problèmes)
+- [Banc de test](#banc-de-test)
 - [Datasheet](#datasheet)
 - [Conclusions et analyse critique du projet](#conclusions-et-analyse-critique-du-projet)
 - [Contacts](#contacts)
@@ -159,19 +160,36 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option Graphite Sensor récupère sa valeur de résistance et l'affiche sur l'OLED (normalement). Enfin, la dernière option déplace le servomoteur en fonction de la valeur du flex sensor.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le calcul de la résistance du capteur en graphite se fait avec : $$Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$$ \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le calcul de la résistance du capteur en graphite se fait avec : $$Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$$
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Et dans notre cas, notre résistance R2 est variable : c'est celle du potentiomètre digital qui est calculé avec : $`R2=\frac{47500*pos}{256}+125`$ où notre $47500$ correspond à la valeur de résistance maximale de notre MCP41050 et $pos$ la position du potentiomètre parmi les 256 valeurs.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et affiche un graphe.
 
+## Tentatives de résolution des problèmes
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorsque nous tentons de récupérer la valeur de la résistance du capteur graphite, nous obtenons une valeur infinie. En effet, la tension de sortie de ce capteur est nulle. Nous avons vérifié toutes les connexions sur le PCB à l'aide d'un multimètre. Nous avons également vérifié les valeurs des résistances et changé les composants. Nous avons aussi essayé de remplacer le potentiomètre par une résistance fixe de 1 $k\ohm$, le capteur graphite par une résistance fixe de 100 $M\ohm$ et le PCB par une breadboard. Enfin, nous avons essayé diférents programmes, qui donnaient tous le meme resultat. Nous n'avons pas réussi à identifier le problème et nous avions déjà passé beaucoup de temps dessus alors nous  avons décidé d'utiliser le pin A0, celui du flex sensor, pour récupérer les valeurs du capteur graphite.
+
 ## Application Android
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
 
-## Tentatives de résolution des problèmes
+## Banc de test
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorsque nous tentons de récupérer la valeur de la résistance du capteur graphite, nous obtenons une valeur infinie. En effet, la tension de sortie de ce capteur est nulle. Nous avons vérifié toutes les connexions sur le PCB à l'aide d'un multimètre. Nous avons également vérifié les valeurs des résistances et changé les composants. Nous avons aussi essayé de remplacer le potentiomètre par une résistance fixe de 1$k\ohm$, le capteur graphite par une résistance fixe de 100$M\ohm$ et le PCB par une breadboard. Enfin, nous avons essayé diférents programmes, qui donnaient tous le meme resultat. Nous n'avons pas réussi à identifier le problème et nous avions déjà passé beaucoup de temps dessus alors nous  avons décidé d'utiliser le pin A0, celui du flex sensor pour récupérer les valeurs du capteur graphite.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demis-cercles avec des rayons de courbure différents. Grâce à ces demis-cercles, nous allons pouvoir calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier $e=0.2 mm$.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voici les courbes obtenues: 
+(![Courbe_tension](/Photos/Courbe_tension.jpg))
+
+(![Courbe_compression](/Photos/Courbe_compression.jpg))
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous remarquons que la résistance augmente lorsque l'on met le capteur en tension et qu'elle diminue lors de la compression. En tension, la distance entre les atomes augmente et la résistance augmente avec. Le contraire se produit pour la compression.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En fonction du type de crayon utilisé, les variations relatives de résistance changent. Plus le crayon est gras (2H->H->HB->B->2B avec 2B avec le plus de carbone), moins sa variation relative de résistance est élevée.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enfin, on peut comparer notre capteur avec un flex sensor commercial. Il semblerait que le flex sensor soit plus sensible à la déformation, en plus d'être plus solide pour des déformations importantes. Pour notre capteur, il a un nombre d'utilisation très limité.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nos mesures ne sont pas forcément reproductibles car elles dépendent fortement de la quantité de crayon déposé. Ainsi, la résistance varie beaucoup d'un capteur à un autre. 
 
 ## Datasheet
 
