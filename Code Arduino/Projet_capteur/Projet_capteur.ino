@@ -298,9 +298,9 @@ void Afficher_Menu (){
           ecranOLED.println (F("*MENU*"));
           ecranOLED.setTextSize(1);
           ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-          ecranOLED.println(F("Mesure Flex Sensor")); // Ecrit le premier choix du menu comme en "surbrillance"...
+          ecranOLED.println(F("Flex Sensor")); // Ecrit le premier choix du menu comme en "surbrillance"...
           ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-          ecranOLED.println(F("Mesure Graphite Sensor")); // ... et le reste normalement
+          ecranOLED.println(F("Graphite Sensor")); // ... et le reste normalement
           ecranOLED.println(F("Servomoteur"));
           ecranOLED.display();
         }
@@ -314,7 +314,9 @@ void Afficher_Menu (){
           ecranOLED.println (F("FlexSensor :"));
           ecranOLED.setTextSize(1);
           valeur = flexSensor();
+          Serial.println (valeur);
           dtostrf(valeur, 16, 2, place);
+          Serial.println (place);
           ecranOLED.println (place);
           ecranOLED.display();
         }
@@ -329,9 +331,9 @@ void Afficher_Menu (){
             ecranOLED.println (F("*MENU*"));
             ecranOLED.setTextSize(1);
             ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-            ecranOLED.println(F("Mesure Flex Sensor"));
+            ecranOLED.println(F("Flex Sensor"));
             ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-            ecranOLED.println(F("Mesure Graphite Sensor"));
+            ecranOLED.println(F("Graphite Sensor"));
             ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
             ecranOLED.println(F("Servomoteur"));
             ecranOLED.display();
@@ -363,8 +365,8 @@ void Afficher_Menu (){
           ecranOLED.println (F("*MENU*"));
           ecranOLED.setTextSize(1);
           ecranOLED.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-          ecranOLED.println(F("Mesure Flex Sensor"));
-          ecranOLED.println(F("Mesure Graphite Sensor"));
+          ecranOLED.println(F("Flex Sensor"));
+          ecranOLED.println(F("Graphite Sensor"));
           ecranOLED.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
           ecranOLED.println(F("Servomoteur"));
           ecranOLED.display();
