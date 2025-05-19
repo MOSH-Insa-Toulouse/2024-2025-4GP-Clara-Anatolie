@@ -178,7 +178,8 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demis-cercles avec des rayons de courbure différents. Grâce à ces demis-cercles, nous allons pouvoir calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier $e=0.2 mm$.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voici les courbes obtenues: 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voici les courbes obtenues:                                                                  
+
 ![Tests_tension](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_tension.png)
 
 ![Tests_compression](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_compression.png)
