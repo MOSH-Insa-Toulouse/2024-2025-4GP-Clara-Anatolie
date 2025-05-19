@@ -108,7 +108,7 @@ void setup() {
   pinMode (txPin,OUTPUT);
 
   mySerial.begin(baudrate);
-  Serial.begin(baudrate);
+  Serial.begin(9600);
 
   //Servomoteur:
   myservo.attach(servopin);
@@ -174,13 +174,13 @@ void loop() {
 // Renvoie la valeur de la résisatnce aux bornes du flex sensor
 
 float flexSensor() {
-  char val_envoi[16];
+  char val_envoi[20];
 
   float ADCflex = analogRead(flexPin);
   float Vflexs = ADCflex * VCC / 1024.0;
   float Rflexs = Rdiv * (VCC / Vflexs - 1.0);
 
-  dtostrf(Rflexs, 16, 0, val_envoi);
+  dtostrf(Rflexs, sizeof(val_envoi)-1, 0, val_envoi);
   mySerial.write(val_envoi);
   delay(500);
   return Rflexs;
@@ -230,20 +230,20 @@ void Calibration() {
     delay(200);
   } while ((graphiteSensor_voltage() < (target - tol) || graphiteSensor_voltage() > (target + tol)) && pos <= 265);
   
-  dtostrf(pos, 5, 2, chaine);
+  dtostrf(pos, sizeof(chaine)-1, 2, chaine);
   
   if (pos < 265) {
     Serial.println(F("Potentiometer calibrated at position : "));
     Serial.print(chaine);
 
     float val = graphiteSensor();
-    dtostrf(val, 10, 2, chaine);
+    dtostrf(val, sizeof(chaine)-1, 2, chaine);
     Serial.println(F("Value : "));
     Serial.print(chaine);
   }
   else {
     Serial.println(F("Potentiometer not calibrated at target 3V"));
-    dtostrf(pos, 5, 2, chaine);
+    dtostrf(pos, sizeof(chaine)-1, 2, chaine);
     Serial.print(chaine); //à enlever + tard
   }
 } 
@@ -280,9 +280,9 @@ void appui_bouton (){
 void Afficher_Menu (){
   unsigned long currentMillis = millis ();  // Sauvegarde la valeur du temps écoulé depuis le lancement du programme
   float valeur;
-  char place[16];
+  char place[20];
 
-  if (currentMillis - previousMillis >= 300){
+  if (currentMillis - previousMillis >= 500){
     previousMillis = currentMillis;
 
     appui_bouton();
@@ -313,10 +313,8 @@ void Afficher_Menu (){
           ecranOLED.setTextSize(1);
           ecranOLED.println (F("FlexSensor :"));
           ecranOLED.setTextSize(1);
-          valeur = flexSensor();
-          Serial.println (valeur);
-          dtostrf(valeur, 16, 2, place);
-          Serial.println (place);
+          valeur = flexSensor ();
+          dtostrf(valeur, sizeof(place)-1, 2, place);
           ecranOLED.println (place);
           ecranOLED.display();
         }
@@ -350,7 +348,7 @@ void Afficher_Menu (){
             ecranOLED.setTextSize(1);
 
             valeur = graphiteSensor();
-            dtostrf(valeur, 16, 2, place);
+            dtostrf(valeur, sizeof(place)-1, 2, place);
             ecranOLED.println (place); 
             ecranOLED.display();
           }
@@ -384,10 +382,10 @@ void Afficher_Menu (){
           val_flexs=flexSensor();
           Serial.println (val_flexs);
           if ((val_flexs>34000.0)&&(val_flexs<180000.0)){
-            Pos_servo= (180/146000)*(val_flexs-34000 );
+            Pos_servo = (val_flexs/112000)*180;
             myservo.write(Pos_servo);
             Serial.println (Pos_servo);
-            dtostrf(Pos_servo, 16, 2, place);
+            dtostrf(Pos_servo, sizeof(place)-1, 2, place);
             ecranOLED.println (place); 
             ecranOLED.display();
             Serial.println (place);
