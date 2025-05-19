@@ -178,8 +178,8 @@ float flexSensor() {
   char val_envoi[20];
 
   float ADCflex = analogRead(flexPin);
-  float Vflexs = ADCflex * VCC / 1024.0;
-  float Rflexs = Rdiv * (VCC / Vflexs - 1.0);
+  Vflexs = ADCflex * VCC / 1024.0;
+  Rflexs = Rdiv * (VCC / Vflexs - 1.0);
 
   dtostrf(Rflexs, sizeof(val_envoi)-1, 0, val_envoi);
   mySerial.write(val_envoi);
