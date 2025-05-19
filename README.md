@@ -179,9 +179,9 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demis-cercles avec des rayons de courbure différents. Grâce à ces demis-cercles, nous allons pouvoir calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier $e=0.2 mm$.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voici les courbes obtenues: 
-![Courbe_tension](/Photos/Tests_tension.jpg)
+![Tests_tension](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_tension.png)
 
-![Courbe_compression](/Photos/Tests_compression.jpg)
+![Tests_compression](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_compression.png)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous remarquons que la résistance augmente lorsque l'on met le capteur en tension et qu'elle diminue lors de la compression. En tension, la distance entre les atomes augmente et la résistance augmente avec. Le contraire se produit pour la compression.
 
