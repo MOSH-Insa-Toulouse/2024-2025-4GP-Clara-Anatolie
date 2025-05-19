@@ -147,7 +147,7 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 
 ## Code Arduino
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous avons utilisé l'IDE Arduino. Plusieurs fichiers de test sont disponibles dans le [dossier Arduino](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Codes_Arduino_Tests).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous avons utilisé l'IDE Arduino 2.3.4 . Plusieurs fichiers de test sont disponibles dans le [dossier Arduino](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Codes_Arduino_Tests).
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour le [fichier principal](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Projet_capteur), nous avions prévu de faire une calibration du potentiomètre digital en fonction de la valeur mesurée par le capteur graphite. Ensuite, le menu de l'écran OLED propose 3 options:
 - Utiliser le flex sensor
