@@ -75,6 +75,7 @@ const float R5 = 10000;
 
   //OLED:
 int choix = 0;
+float lastval = -100.0;
 
   //Potentiomètre digital:
 const int csPin = 10;
@@ -146,7 +147,7 @@ void setup() {
 void loop() {
 
   Afficher_Menu();
-  Serial.println("OK");
+  //Serial.println("OK");
   
   //char someChar[32]={0};
 
@@ -380,25 +381,31 @@ void Afficher_Menu (){
           ecranOLED.setTextSize(1);
 
           val_flexs=flexSensor();
-          Serial.println (val_flexs);
-          if ((val_flexs>34000.0)&&(val_flexs<180000.0)){
-            Pos_servo = (val_flexs/112000)*180;
-            myservo.write(Pos_servo);
-            Serial.println (Pos_servo);
-            dtostrf(Pos_servo, sizeof(place)-1, 2, place);
-            ecranOLED.println (place); 
-            ecranOLED.display();
-            Serial.println (place);
-          }
-          else {
-            ecranOLED.println ("Verifier la valeur du flex sensor"); 
-            ecranOLED.display();
 
+          if ((abs(val_flexs - lastval))>10){
+            //Serial.println (val_flexs);
+
+            if ((val_flexs>34000.0)&&(val_flexs<180000.0)){
+              Pos_servo = (val_flexs/112000)*180;
+              myservo.write(Pos_servo);
+              //Serial.println (Pos_servo);
+              dtostrf(Pos_servo, sizeof(place)-1, 2, place);
+              ecranOLED.println (place); 
+              ecranOLED.display();
+              //Serial.println (place);
+            }
+            else {
+              ecranOLED.println ("Verifier la valeur du flex sensor");
+              ecranOLED.display();
+
+            }
           }
+
+          lastval=val_flexs;
+          
 
         }
         break;
     }
   }
 }
- 

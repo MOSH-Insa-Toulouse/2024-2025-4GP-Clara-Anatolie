@@ -1,7 +1,7 @@
 #include <Servo.h> 
 int pinMoteur = 9;
 Servo myservo;
-int Pos_servo = 0;
+int Pos_servo = 90;
 
 void setup() {
   myservo.attach(pinMoteur);
