@@ -199,7 +199,7 @@ De plus, nos mesures ne sont pas forcément reproductibles car elles dépendent 
 
 ## Datasheet
 
-La datasheet de notre capteur est disponible [ici](/Datasheet/Datasheet_Capteur_Graphite.pdf).
+La datasheet de notre capteur est disponible [ici](Datasheet).
 
 ## Conclusions et analyse critique du projet
 
