@@ -21,7 +21,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dans le cadre de l'UF "Du capteur au banc de test" effectué en 4ème année au département du Génie Physique de l’INSA Toulouse, nous avons développé un dispositif permettant de mesurer la contrainte appliquée sur un capteur graphite. Ce dernier est basé sur l'article "Pencil Drawn Strain Gauges and Chemiresistors on Paper" (Cheng-Wei Lin*, Zhibo Zhao*, Jaemyung Kim & Jiaxing Huang). Il est simplement composé d'un bout de papier sur lequel on vient déposer du graphite à l'aide d'un crayon à papier. La couche de graphite est constituée de particules reliées entre elles. En déformant le papier, la disposition des particules varie. En fonction du sens de flexion du papier, la déformation peut être soit une traction soit une compression. Dans le cas d’une traction, les particules de graphique s’écartent, la résistance augmente. Dans le cas d’une compression, les particules se rapprochent et la résistance diminue. Ainsi donc, ce système granulaire subit une modification de résistance et de conductance selon la contrainte exercée. Grâce à cela, nous pouvons remonter à la déformation, telle une jauge de contrainte traditionnelle.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Afin de réaliser ce dispositif permettant la mesure de déformation à partir d'un capteur low-tech, il nous faut suivre différentes étapes : simulations électroniques, design du PCB, code arduino et réalisation de la datasheet.
+Afin de réaliser ce dispositif permettant la mesure de déformation à partir d'un capteur low-tech, il nous faut suivre différentes étapes : simulations électroniques, design du PCB, code arduino et réalisation de la datasheet.
 
 Ici, nous faisons un point de tout ce qui a été fait dans le cadre de ce projet.
 
@@ -84,7 +84,7 @@ De plus, nous avons placé la capacité C3 de sorte à ce qu'elle filtre le brui
 
 ***Simulations réalisées sous LTSpice***
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour savoir si nos filtres étaient efficients, nous avons testé notre circuit le logiciel LTSpice, en deux temps.
+Pour savoir si nos filtres étaient efficients, nous avons testé notre circuit le logiciel LTSpice, en deux temps.
 D'abord, nous avons effectué une première simulation en régime transitoire pour vérifier que l'amplification soit bien effective. Voici la réponse obtenue :
 
 ![Test_En_Transitoire](/Photos/verif1%20LTSPICE.png)
@@ -112,7 +112,7 @@ Nous avons débuté par la création d'une librairie de symboles comportant tous
 
 ![Schema_elec_Kicad](/Photos/Schéma%20elec.PNG)
 
-Nous avons ensuite réalisé les empreintes de nos composants en respectant certaines dimensions, en vue de l'impression du PCB (diamètre des trous, forme des empreintes, etc.).Nous sommes ensuite passées à la disposition des composants sur le PCB : une étape complexe car il faut faire des compromis afin d'obtenir le placement le plus efficace (en considérant les connexions entre composants, en évitant d'avoir recours aux vias, etc.)... L'image ci-dessous correspond au résultat final de notre PCB :
+Nous avons ensuite réalisé les empreintes de nos composants en respectant certaines dimensions, en vue de l'impression du PCB (diamètre des trous, forme des empreintes, etc.).Nous sommes ensuite passées à la disposition des composants sur le PCB : une étape complexe car il faut faire des compromis afin d'obtenir le placement le plus efficace (en considérant les connexions entre composants, en évitant d'avoir recours aux vias, etc.). L'image ci-dessous correspond au résultat final de notre PCB :
 
 ![PCB_Kicad](/Photos/PCB.PNG)
 
@@ -126,12 +126,17 @@ Les fichiers KiCad sont disponibles dans le dossier [KiCad](https://github.com/M
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une fois notre PCB réalisé sur Kicad, nous avons pu passer à la réalisation physique de notre PCB. Voici les étapes de fabrication réalisées, avec l'aide de Cathy Crouzet (un grand merci à elle qui a pris le temps de tirer notre PCB et nous expliquer le processus de fabrication !) :
 
-Étape 0 (importante !) : vérification du PCB sous KiCad ;
-Étape 1 : édition du masque de gravure de notre PCB sous KiCad ;
-Étape 2 : insolation UV d'une plaquette d'époxy recouverte d'une couche de cuivre et de résine photosensible ;
-Étape 3 : immersion de la plaquette dans un révélateur afin d'éliminer la résine non-insolée ;
-Étape 4 : immersion de la plaquette dans du perchlorure de fer pour graver les pistes ;
-Étape 5 : nettoyage de la plaquette avec de l'acétone pour retirer la résine restante.
+- Étape 0 (importante !) : vérification du PCB sous KiCad ;
+
+- Étape 1 : édition du masque de gravure de notre PCB sous KiCad ;
+
+- Étape 2 : insolation UV d'une plaquette d'époxy recouverte d'une couche de cuivre et de résine photosensible ;
+
+- Étape 3 : immersion de la plaquette dans un révélateur afin d'éliminer la résine non-insolée ;
+
+- Étape 4 : immersion de la plaquette dans du perchlorure de fer pour graver les pistes ;
+
+- Étape 5 : nettoyage de la plaquette avec de l'acétone pour retirer la résine restante.
 
 Nous avons ensuite pu réaliser le perçage de notre plaquette et y souder nos divers composants selon le schéma du PCB obtenu sur Kicad.
 
@@ -143,28 +148,28 @@ Voici le résultat final de notre PCB :
 
 L’assemblage de la plaquette et l’Arduino a été plus compliqué que prévu. En effet, l'ensemble de nos trous étaient légèrement décalés les uns par rapport aux autres. Le problème semblait venir de l’étape de perçage.
 
-De plus, le header connecté à la pin A0, qui devait servir pour le capteur de graphite, ne fonctionne pas. Nous avons donc décidé d'utiliser la pin A1, qui servira donc à récupérer les données du flex sensor et du capteur de graphite. Il nous suffit alors de brancher/débrancher les capteurs pour les changer. Malheureusement, le signal provenant du capteur de graphite ne sera donc pas filtré.
+De plus, le header connecté à la pin A0, qui devait servir pour le capteur de graphite, ne fonctionne pas. Nous avons donc décidé d'utiliser la pin A1, qui servira donc à récupérer les données du flex sensor et du capteur de graphite. Il nous suffit alors de brancher/débrancher les capteurs pour les échanger. Malheureusement, le signal provenant du capteur de graphite ne sera donc pas filtré et amplifié.
 
 ## Code Arduino
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous avons utilisé l'IDE Arduino 2.3.4 . Plusieurs fichiers de test sont disponibles dans le [dossier Arduino](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Codes_Arduino_Tests).
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour le [fichier principal](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Projet_capteur), nous avions prévu de faire une calibration du potentiomètre digital en fonction de la valeur mesurée par le capteur graphite. Ensuite, le menu de l'écran OLED propose 3 options:
+Pour le [fichier principal](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Projet_capteur), nous avions prévu de faire une calibration du potentiomètre digital en fonction de la valeur mesurée par le capteur graphite. Ensuite, le menu de l'écran OLED propose 3 options :
 - Utiliser le flex sensor
 - Utiliser le capteur graphite
 - Utiliser le Servomoteur
 
 ![Menu](/Photos/Menu.jpg)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le choix se fait grâce à l'encodeur rotatoire. En tournant, on peut passer sur les différentes options puis en sélectionner une en appuyant sur l'encodeur. Cet appui sert également à sortir du menu selectionné.
+Le choix se fait grâce à l'encodeur rotatoire. En tournant, on peut passer sur les différentes options puis en sélectionner une en appuyant sur l'encodeur. Cet appui sert également à sortir du menu selectionné.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option Graphite Sensor récupère sa valeur de résistance et l'affiche sur l'OLED (normalement). Enfin, la dernière option déplace le servomoteur en fonction de la valeur du flex sensor.
+L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option Graphite Sensor récupère sa valeur de résistance et l'affiche aussi sur l'écran. Enfin, la dernière option déplace le servomoteur en fonction de la valeur du flex sensor.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le calcul de la résistance du capteur en graphite se fait avec : $$Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$$
+Le calcul de la résistance du capteur en graphite se fait avec la formule : $Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Et dans notre cas, notre résistance R2 est variable : c'est celle du potentiomètre digital qui est calculé avec : $`R2=\frac{47500*pos}{256}+125`$ où notre $47500$ correspond à la valeur de résistance maximale de notre MCP41050 et $pos$ la position du potentiomètre parmi les 256 valeurs.
+Dans notre cas, la résistance R2 est variable : c'est celle du potentiomètre digital qui est calculé avec : $R2=\frac{47500*pos}{256}+125$, où $47500$ correspond à la valeur de résistance maximale de notre MCP41050 et $pos$ la position du potentiomètre parmi les 256 valeurs.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et affiche un graphe.
+Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et affiche un graphe.
 
 ## Tentatives de résolution des problèmes
 
@@ -172,25 +177,25 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 
 ## Application Android
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
+Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
 
 ## Banc de test
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demis-cercles avec des rayons de courbure différents. Grâce à ces demis-cercles, nous allons pouvoir calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier $e=0.2 mm$.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demi-cercles avec des rayons de courbure différents. Grâce à ces demi-cercles, nous avons pu calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier e=0.2 $mm$.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Voici les courbes obtenues:                                                                  
+Voici les courbes obtenues :
 
 ![Tests_tension](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_tension.png)
 
 ![Tests_compression](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/blob/main/Photos/Tests_compression.png)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nous remarquons que la résistance augmente lorsque l'on met le capteur en tension et qu'elle diminue lors de la compression. En tension, la distance entre les atomes augmente et la résistance augmente avec. Le contraire se produit pour la compression.
+Nous remarquons que la résistance augmente lorsque l'on met le capteur en tension et qu'elle diminue lors de la compression. En tension, la distance entre les atomes augmente et la résistance augmente avec. Le contraire se produit pour la compression.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En fonction du type de crayon utilisé, les variations relatives de résistance changent. Plus le crayon est gras (2H->H->HB->B->2B avec 2B avec le plus de carbone), moins sa variation relative de résistance est élevée.
+En fonction du type de crayon utilisé, les variations relatives de résistance changent. Plus le crayon est gras (2H->H->HB->B->2B avec 2B contenant le plus de carbone), moins sa variation relative de résistance est élevée.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enfin, on peut comparer notre capteur avec un flex sensor commercial. Il semblerait que le flex sensor soit plus sensible à la déformation, en plus d'être plus solide pour des déformations importantes. Pour notre capteur, il a un nombre d'utilisation très limité.
+Enfin, on peut comparer notre capteur avec un flex sensor commercial. Il semblerait que le flex sensor soit plus sensible à la déformation, en plus d'être plus solide pour des déformations importantes. Cepndant, le capteur graphite a un nombre d'utilisation très limité.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nos mesures ne sont pas forcément reproductibles car elles dépendent fortement de la quantité de crayon déposé. Ainsi, la résistance varie beaucoup d'un capteur à un autre. 
+De plus, nos mesures ne sont pas forcément reproductibles car elles dépendent fortement de la quantité de crayon déposé. Ainsi, la résistance varie beaucoup d'un capteur à un l'autre.
 
 ## Datasheet
 
@@ -200,11 +205,11 @@ La datasheet de notre capteur est disponible [ici](https://github.com/MOSH-Insa-
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ce projet a été très enrichissant. En menant un projet de bout en bout, des simulations à la datasheet, nous avons pu avoir un avant goût du travail d'ingénieur. Nous avons aussi pu avoir une vision des nombreuses compétences (simulation électronique, développement informatique, design d'un montage électronique, fabrication physique de ce dernier, etc.) indispensables à un ingénieur de nos jours. En ce sens, c'est un projet qui a donc été assez professionnalisant. De  plus, il est gratifiant de pouvoir fabriquer un produit dans son entièreté et de le voir fonctionner.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En ce qui concerne le capteur graphite fabriqué, il n'est malheureusement pas fonctionnel pour nous, malgré toutes nos tentatives de compréhension du problème. Les tests avec le pin du flex sensor nous permettent de dégager des tendances à peu près cohérentes avec la physique. Cependant, les conditions de tests étant rudimentaires, peu reproductibles et non flitrées dans notre cas, cela conduit à tout de même obtenir des résultats assez aléatoires. Il est donc nécessaire de prendre du recul.
+En ce qui concerne le capteur graphite fabriqué, il n'est malheureusement pas fonctionnel pour nous, malgré toutes nos tentatives de compréhension du problème. Les tests avec la pin du flex sensor nous permettent de dégager des tendances à peu près cohérentes avec la physique. Cependant, les conditions de tests étant rudimentaires, peu reproductibles et non flitrées dans notre cas, cela conduit à des résultats assez aléatoires. Il est donc nécessaire de prendre du recul sur leur véracité.
 
 ## Contacts
 
-Pour toute information complémentaire, vous pouvez nous contacter à ces adresses mails :
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour toute information complémentaire, vous pouvez nous contacter à ces adresses mails :
 
 - Anatolie Blanc : <anatolie.blanc@insa-toulouse.fr>
 - Clara Jeandenans : <clara.jeandenans@insa-toulouse.fr>
