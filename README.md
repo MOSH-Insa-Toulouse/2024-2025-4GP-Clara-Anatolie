@@ -177,7 +177,23 @@ Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et 
 
 ## Application Android
 
-Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/) .
+Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/). Nous avons mis un bouton permettant de sélectionner l'appareil connecté au bluetooth, une zone de lecture de la valeur de la résistance mesurée, ainsi qu'un graphe permettant de voir l'évolution temporelle de cette valeur. Un dernier bouton permet d'écrire la valeur 10 dans le serial monitor, afin de tester l'envoi de données de l'application vers le dispositif bluetooth. Nous n'avons malheureusement pas eu le temps de développer plus l'application, souhaitant résoudre le problème du capteur graphite.
+
+L'interface utilisateur de l'application :
+
+![Menu](/Photos/Face%20avant%20appli.PNG)
+
+La face arrière de l'application :
+
+![Menu](/Photos/Face%20arrière%20appli.PNG)
+
+Un test réalisé avec le flex sensor :
+
+![Menu](/Photos/Application.jpg)
+
+Le QR code pour télécharger l'application : 
+
+![Menu](/Photos/QR%20Code%20téléchargement%20application.PNG)
 
 ## Banc de test
 
