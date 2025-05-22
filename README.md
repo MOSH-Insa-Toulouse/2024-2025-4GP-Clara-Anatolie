@@ -29,7 +29,7 @@ Ici, nous faisons un point de tout ce qui a été fait dans le cadre de ce proje
 
 Plusieurs livrables sont attendus :
 
-- **Un shield PCB connecté à une carte arduino UNO** avec différents composants : un capteur graphite, un amplificateur transimpédance, un module bluetooth, un écran OLED, un flexsensor commercial, un potentiomètre digital, un encodeur rotatoire. D'autres composants peuvent être implémentés. Nous avons opté pour l'ajout d'un servomotor ;
+- **Un shield PCB connecté à une carte arduino UNO** avec différents composants : un capteur graphite, un amplificateur transimpédance, un module bluetooth, un écran OLED, un flex sensor commercial, un potentiomètre digital, un encodeur rotatoire. D'autres composants peuvent être implémentés. Nous avons opté pour l'ajout d'un servo motor ;
 - **Un code arduino** qui gère les différents composants cités précédemments (mesures de contraintes, échanges bluetooth et OLED, potentiomètre digital et boutons) ;
 - **Une application Android** (sous MIT App Inventor) interfaçant le PCB et le code Arduino correspondant;
 - **Une datasheet du capteur** reprenant toutes ses caractéristiques ainsi que ses tests.
@@ -51,8 +51,8 @@ Afin de réaliser notre dispositif électronique, nous avons eu besoin de :
 - Résistance : une de 47kΩ pour le flex sensor ;
 - Module Bluetooth HC05 ;
 - Ecran OLED de dimension 128*64 ;
-- Flexsensor ;
-- Servomotor ;
+- Flex sensor ;
+- Servo motor ;
 - Encodeur rotatoire ;
 - Capteur graphite et 2 pinces crocodiles ;
 - 20 sockets ;
@@ -89,7 +89,7 @@ D'abord, nous avons effectué une première simulation en régime transitoire po
 
 ![Test_En_Transitoire](/Photos/verif1%20LTSPICE.png)
 
-Comme on peut le constater sur le graphe, le signal est bien amplifié à 1V. L'Arduino pourra donc l'interpréter.
+Comme on peut le constater sur le graphe, le signal est bien amplifié à 1 V. L'Arduino pourra donc l'interpréter.
 
 Ensuite, nous avons effectué une seconde simulation, afin d'observer la réponse à un courant alternatif et ainsi de vérifier que le signal est bien filtré.
 
@@ -157,13 +157,13 @@ De plus, le header connecté à la pin A0, qui devait servir pour le capteur de 
 Pour le [fichier principal](https://github.com/MOSH-Insa-Toulouse/2024-2025-4GP-Clara-Anatolie/tree/main/Code%20Arduino/Projet_capteur), nous avions prévu de faire une calibration du potentiomètre digital en fonction de la valeur mesurée par le capteur graphite. Ensuite, le menu de l'écran OLED propose 3 options :
 - Utiliser le flex sensor
 - Utiliser le capteur graphite
-- Utiliser le Servomoteur
+- Utiliser le Servo moteur
 
 ![Menu](/Photos/Menu.jpg)
 
 Le choix se fait grâce à l'encodeur rotatoire. En tournant, on peut passer sur les différentes options puis en sélectionner une en appuyant sur l'encodeur. Cet appui sert également à sortir du menu selectionné.
 
-L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option Graphite Sensor récupère sa valeur de résistance et l'affiche aussi sur l'écran. Enfin, la dernière option déplace le servomoteur en fonction de la valeur du flex sensor.
+L'option concernant le flex sensor récupère sa valeur et l'écrit sur l'OLED. L'option "Graphite Sensor" récupère sa valeur de résistance et l'affiche aussi sur l'écran. Enfin, la dernière option déplace le servo moteur en fonction de la valeur du flex sensor.
 
 Le calcul de la résistance du capteur en graphite se fait avec la formule : $Res=R1*(1+\frac{R3}{R2})*\frac{Vcc}{Vadc}-R1-R5$
 
@@ -173,11 +173,11 @@ Le module bluetooth HC-05 reçoit également les valeurs du capteur graphite et 
 
 ## Tentatives de résolution des problèmes
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorsque nous tentons de récupérer la valeur de la résistance du capteur graphite, nous obtenons une valeur infinie. En effet, la tension de sortie de ce capteur est nulle. Nous avons vérifié toutes les connexions sur le PCB à l'aide d'un multimètre. Nous avons également vérifié les valeurs des résistances et changé les composants. Nous avons aussi essayé de remplacer le potentiomètre par une résistance fixe de 1 $k\ohm$, le capteur graphite par une résistance fixe de 100 $M\ohm$ et le PCB par une breadboard. Enfin, nous avons essayé diférents programmes, qui donnaient tous le meme resultat. Nous n'avons pas réussi à identifier le problème et nous avions déjà passé beaucoup de temps dessus alors nous  avons décidé d'utiliser le pin A1, celui du flex sensor, pour récupérer les valeurs du capteur graphite.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorsque nous tentons de récupérer la valeur de la résistance du capteur graphite, nous obtenons une valeur infinie. En effet, la tension de sortie de ce capteur est nulle. Nous avons vérifié toutes les connexions sur le PCB à l'aide d'un multimètre. Nous avons également vérifié les valeurs des résistances et changé les composants. Nous avons aussi essayé de remplacer le potentiomètre par une résistance fixe de 1 kOhms, le capteur graphite par une résistance fixe de 100 MOhm et le PCB par une breadboard. Enfin, nous avons essayé diférents programmes, qui donnaient tous le meme resultat. Nous n'avons pas réussi à identifier le problème et nous avions déjà passé beaucoup de temps dessus alors nous  avons décidé d'utiliser le pin A1, celui du flex sensor, pour récupérer les valeurs du capteur graphite.
 
 ## Application Android
 
-Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/). Nous avons mis un bouton permettant de sélectionner l'appareil connecté au bluetooth, une zone de lecture de la valeur de la résistance mesurée, ainsi qu'un graphe permettant de voir l'évolution temporelle de cette valeur. Un dernier bouton permet d'écrire la valeur 10 dans le serial monitor, afin de tester l'envoi de données de l'application vers le dispositif bluetooth. Nous n'avons malheureusement pas eu le temps de développer plus l'application, souhaitant résoudre le problème du capteur graphite.
+Une application a été développée sous [MIT App Inventor](https://appinventor.mit.edu/). Elle fonctionne lorsque l'on entre dans le menu "Flex Sensor", sur le menu principal. Nous avons mis un bouton permettant de sélectionner l'appareil connecté au bluetooth, une zone de lecture de la valeur de la résistance mesurée, ainsi qu'un graphe permettant de voir l'évolution temporelle de cette valeur. Un dernier bouton permet d'écrire la valeur 10 dans le serial monitor, afin de tester l'envoi de données de l'application vers le dispositif bluetooth. Nous n'avons malheureusement pas eu le temps de développer plus l'application, souhaitant résoudre le problème du capteur graphite.
 
 L'interface utilisateur de l'application :
 
@@ -197,7 +197,7 @@ Le QR code pour télécharger l'application :
 
 ## Banc de test
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demi-cercles avec des rayons de courbure différents. Grâce à ces demi-cercles, nous avons pu calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier e=0.2 $mm$.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pour caractériser notre capteur et son montage, nous avons décidé d'utiliser des demi-cercles avec des rayons de courbure différents. Grâce à ces demi-cercles, nous avons pu calculer la variation de la résistance électrique $\frac{\Delta R}{R_0}$ en fonction de la déformation $\epsilon=\frac{e}{D}$. Nous avons ici mesuré notre épaisseur de notre papier e = 0.2 mm.
 
 Voici les courbes obtenues :
 
