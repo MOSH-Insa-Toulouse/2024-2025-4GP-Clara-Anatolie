@@ -244,8 +244,8 @@ void Calibration() {
   }
   else {
     Serial.println(F("Potentiometer not calibrated at target 3V"));
-    dtostrf(pos, sizeof(chaine)-1, 2, chaine);
-    Serial.print(chaine); //à enlever + tard
+    //dtostrf(pos, sizeof(chaine)-1, 2, chaine);
+    //Serial.print(chaine);
   }
 } 
 
