@@ -66,11 +66,11 @@ Afin de réaliser notre dispositif électronique, nous avons eu besoin de :
 
 Nous avons testé ce montage sur le logiciel LTspice :
 
-![montage_capteur_graphite](/Photos/Schema%20montage%20transimpedance.png)
+![montage_capteur_graphite](/Photos/Schema%20du%20montage%20transimpedance.png)
 
 Pour construire ce montage, nous nous sommes basées sur ce schéma ci :
 
-![montage_transimpédance](/Photos/ampli%20transimpedance.png)
+![montage_transimpédance](/Photos/Amplificateur%20transimpedance.png)
 
 Concernant le choix de notre AOP, celui-ci devait être capable d'accepter en entrée un très faible courant. Il doit également avoir un offset de tension très faible afin de ne pas fausser les valeurs de tension transmises à l'ADC, puis analysées. Ainsi, nous avons choisi l’AOP nommé LTC 1050.
 
@@ -87,13 +87,13 @@ De plus, nous avons placé la capacité C3 de sorte à ce qu'elle filtre le brui
 Pour savoir si nos filtres étaient efficients, nous avons testé notre circuit le logiciel LTSpice, en deux temps.
 D'abord, nous avons effectué une première simulation en régime transitoire pour vérifier que l'amplification soit bien effective. Voici la réponse obtenue :
 
-![Test_En_Transitoire](/Photos/verif1%20LTSPICE.png)
+![Test_En_Transitoire](/Photos/LTSpice%201.png)
 
 Comme on peut le constater sur le graphe, le signal est bien amplifié à 1 V. L'Arduino pourra donc l'interpréter.
 
 Ensuite, nous avons effectué une seconde simulation, afin d'observer la réponse à un courant alternatif et ainsi de vérifier que le signal est bien filtré.
 
-![Test_En_AC](/Photos/verif2%20LTSPICE.png)
+![Test_En_AC](/Photos/LTSpice%203.png)
 
 Comme on peut le constater ci-dessous, le signal paraît être filtré successivement par les 3 filtres. Le bruit est atténué d’environ 72dB à 50Hz. Le montage est performant.
 
@@ -110,7 +110,7 @@ Tous nos composants ont été installés sur un shield d'Arduino UNO.
 
 Nous avons débuté par la création d'une librairie de symboles comportant tous les différents composants. Puis, nous avons procédé à la réalisation de la schématique électrique de l'ensemble du montage sur Kicad. Voici le schéma électrique de l'ensemble de notre montage :
 
-![Schema_elec_Kicad](/Photos/Schéma%20elec.PNG)
+![Schema_elec_Kicad](/Photos/Schématique%20électrique.PNG)
 
 Nous avons ensuite réalisé les empreintes de nos composants en respectant certaines dimensions, en vue de l'impression du PCB (diamètre des trous, forme des empreintes, etc.).Nous sommes ensuite passées à la disposition des composants sur le PCB : une étape complexe car il faut faire des compromis afin d'obtenir le placement le plus efficace (en considérant les connexions entre composants, en évitant d'avoir recours aux vias, etc.). L'image ci-dessous correspond au résultat final de notre PCB :
 
@@ -181,15 +181,15 @@ Une application a été développée sous [MIT App Inventor](https://appinventor
 
 L'interface utilisateur de l'application :
 
-![Menu](/Photos/Face%20avant%20appli.PNG)
+![Menu](/Photos/Interface%20application.PNG)
 
 La face arrière de l'application :
 
-![Menu](/Photos/Face%20arrière%20appli.PNG)
+![Menu](/Photos/Face%20arrière%20application.PNG)
 
 Un test réalisé avec le flex sensor :
 
-![Menu](/Photos/Application.jpg)
+![Menu](/Photos/Test%20du%20flexsensor%20avec%20application.jpg)
 
 Le QR code pour télécharger l'application : 
 
